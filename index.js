@@ -22,7 +22,7 @@ const choices = () => {
         name: "choices",
         type: "list",
         message: "What would you like to do?",
-        choices: ["ADD", "VIEW", "UPDATE", "EXIT"],
+        choices: ["ADD", "VIEW", "EXIT"],
       },
     ])
     .then((answer) => {
@@ -63,8 +63,9 @@ function viewThing() {
             console.log(err);
           }
           console.table(result);
+          choices()
         });
-        console.log("you want dept data");
+      
         // addThing();
       } else if (answer.table === "role") {
         db.query("SELECT * FROM roles", (err, result) => {
@@ -72,6 +73,7 @@ function viewThing() {
             console.log(err);
           }
           console.table(result);
+          choices()
         });
         console.log("you want role data");
       } else if (answer.table === "emp") {
@@ -80,11 +82,10 @@ function viewThing() {
             console.log(err);
           }
           console.table(result);
-          choices();
+          choices()
         });
-        console.log("you want emp data");
-        
       }
+      
     });
   // console.log("this is veiw thing")
 }
@@ -131,7 +132,7 @@ const departmentQ = () => {
           if (err) {
             console.log(err);
           }
-          console.table(result);
+          console.log("success");
           choices();
         }
       );
@@ -157,18 +158,18 @@ const roleQ = () => {
         name: "department_id",
       },
     ])
-    .then(function (ans) {
+    .then(function (answ) {
       db.query(
         "INSERT INTO roles SET ?",
-        { role: ans.title, 
-          role: ans.salary, 
-          role: ans.department_id },
+        { title: answ.title, 
+          salary: answ.salary, 
+          department_id: answ.department_id },
 
         (err, result) => {
           if (err) {
             console.log(err);
           }
-          console.table(result);
+          console.log("success");
           choices();
         }
       );
@@ -194,7 +195,7 @@ const employeeQ = () => {
         name: "roleId",
       },
       {
-        type: "list",
+        type: "input",
         message: "What is the manager id?",
         name: "managerId",
       },
@@ -204,16 +205,16 @@ const employeeQ = () => {
       db.query(
         "INSERT INTO employee SET ?",
         {
-          emp: ans.firstName,
-          emp: ans.lastName,
-          emp: ans.roleId,
-          emp: ans.managerId,
+        first_name: ans.firstName,
+          last_name: ans.lastName,
+          roles_id: ans.roleId,
+          manager_id: ans.managerId,
         },
         (err, result) => {
           if (err) {
             console.log(err);
           }
-          console.table(result);
+          console.log("success");
           choices();
         }
       );
