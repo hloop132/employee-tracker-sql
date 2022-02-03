@@ -67,7 +67,7 @@ function viewThing() {
         console.log("you want dept data");
         // addThing();
       } else if (answer.table === "role") {
-        db.query("SELECT * FROM role", (err, result) => {
+        db.query("SELECT * FROM roles", (err, result) => {
           if (err) {
             console.log(err);
           }
@@ -80,34 +80,39 @@ function viewThing() {
             console.log(err);
           }
           console.table(result);
+          choices();
         });
         console.log("you want emp data");
+        
       }
     });
   // console.log("this is veiw thing")
 }
 
 const addThing = () => {
-  inquirer.prompt([{
-    type: "list",
-    message: "what do you want to add?",
-    name: "addChoice",
-    choices: ["department","role","employee"]
-  }])
-  .then((ans) =>{
-    switch (ans.addChoice) {
-      case "department":
-        departmentQ() 
-        break;
-      case "role":
-        roleQ()
-        break;
-      default:
-        employeeQ()
-        break;
-    }
-  })
-}
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        message: "what do you want to add?",
+        name: "addChoice",
+        choices: ["department", "role", "employee"],
+      },
+    ])
+    .then((ans) => {
+      switch (ans.addChoice) {
+        case "department":
+          departmentQ();
+          break;
+        case "role":
+          roleQ();
+          break;
+        default:
+          employeeQ();
+          break;
+      }
+    });
+};
 
 const departmentQ = () => {
   inquirer
@@ -120,13 +125,14 @@ const departmentQ = () => {
     ])
     .then(function (ans) {
       db.query(
-        `INSERT INTO derpartment WHERE name = ?`,
-        [ans.name],
+        "INSERT INTO department SET ?",
+        { dpt_name: ans.department },
         (err, result) => {
           if (err) {
             console.log(err);
           }
-          console.log(result);
+          console.table(result);
+          choices();
         }
       );
     });
@@ -148,18 +154,22 @@ const roleQ = () => {
       {
         type: "input",
         message: "What is the department id of the role?",
-        name: "departmentId",
+        name: "department_id",
       },
     ])
     .then(function (ans) {
       db.query(
-        `INSERT INTO role WHERE title = ?, salsry = ?, department_id = ?`,
-        [ans.title, ans.salary, ans.departmentId],
+        "INSERT INTO roles SET ?",
+        { role: ans.title, 
+          role: ans.salary, 
+          role: ans.department_id },
+
         (err, result) => {
           if (err) {
             console.log(err);
           }
-          console.log(result);
+          console.table(result);
+          choices();
         }
       );
     });
@@ -189,15 +199,22 @@ const employeeQ = () => {
         name: "managerId",
       },
     ])
+
     .then(function (ans) {
       db.query(
-        `INSERT INTO employee WHERE first_name = ?, last_name = ?, role_id = ?, manager_id = ?`,
-        [ans.firstName, ans.lastName, ans.roleId, ans.managerId],
+        "INSERT INTO employee SET ?",
+        {
+          emp: ans.firstName,
+          emp: ans.lastName,
+          emp: ans.roleId,
+          emp: ans.managerId,
+        },
         (err, result) => {
           if (err) {
             console.log(err);
           }
-          console.log(result);
+          console.table(result);
+          choices();
         }
       );
     });
